@@ -5,11 +5,12 @@ import gevent
 from flask import Flask, render_template
 from flask_sockets import Sockets
 
-REDIS_URL = os.environ['REDIS_URL']
+REDIS_URL = 'redis://127.0.0.1:6379/0'
 REDIS_CHAN = 'chat'
 
 app = Flask(__name__)
 app.debug = 'DEBUG' in os.environ
+app.debug = True
 
 sockets = Sockets(app)
 redis = redis.from_url(REDIS_URL)
@@ -83,3 +84,7 @@ def outbox(ws):
     while not ws.closed:
         # Context switch while `ChatBackend.start` is running in the background.
         gevent.sleep(0.1)
+
+
+if __name__ == '__main__':
+    app.run()
